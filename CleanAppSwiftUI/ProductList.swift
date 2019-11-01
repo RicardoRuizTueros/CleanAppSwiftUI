@@ -8,30 +8,39 @@
 
 import SwiftUI
 
+struct Product : Identifiable {
+    var id  = UUID()
+    var name : String
+    var image : String = "arkit"
+}
+
 struct ProductList: View {
     
-    let products = [Product(productName: "Product 1"), Product(productName: "Product 2")]
+    let products = [Product(name: "Product 1"), Product(name: "Product 2")]
     
     var body: some View {
-        
         NavigationView {
             List(products) { product in
-                HStack {
-                    Image(systemName: "contact")
-                    Text(product.productName)
-                }
+                ProductCell(product: product)
             }
+            .navigationBarTitle("Products")
+        }
+    }
+    
+    struct ContentView_Previews: PreviewProvider {
+        static var previews: some View {
+            ProductList()
         }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProductList()
+struct ProductCell : View {
+    let product : Product
+    
+    var body: some View {
+        NavigationLink(destination: Text(product.name)) {
+            Image(systemName: product.image)
+            Text(product.name).font(.subheadline)
+        }
     }
-}
-
-struct Product : Identifiable {
-    var id  = UUID()
-    var productName : String
 }
