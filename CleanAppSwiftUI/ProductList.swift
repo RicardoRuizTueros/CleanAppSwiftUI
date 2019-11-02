@@ -15,15 +15,31 @@ struct Product : Identifiable {
 }
 
 struct ProductList: View {
-    
-    let products = [Product(name: "Product 1"), Product(name: "Product 2")]
+    @State var products = [Product(name: "Product 1"), Product(name: "Product 2"), Product(name: "Product 3")]
     
     var body: some View {
-        NavigationView {
-            List(products) { product in
-                ProductCell(product: product)
+        VStack {
+            NavigationView {
+                List {
+                    ForEach(products, id: \.id) { product in
+                        ProductCell(product: product)
+                    }
+                    .onDelete { offsets in
+                        withAnimation (.easeIn) {
+                            self.products.remove(atOffsets: offsets)
+                        }
+                    }
+                }
+                .navigationBarTitle("Products")
             }
-            .navigationBarTitle("Products")
+            
+            Button(action: {
+                withAnimation(.easeOut) {
+                    self.products.append(Product(name: "New product"))
+                }
+            }) {
+                Text("Add product")
+            }
         }
     }
     
